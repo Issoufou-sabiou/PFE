@@ -35,6 +35,30 @@ class AuthViewModel : ViewModel() {
             }
     }
 
+
+
+
+    // Méthode pour récupérer le rôle de l'utilisateur
+    fun getUserRole(onResult: (String) -> Unit) {
+        val userId = auth.currentUser?.uid
+        if (userId != null) {
+            db.collection("utilisateurs").document(userId).get()
+                .addOnSuccessListener { document ->
+                    val role = document.getString("role") ?: "Boutiquier" // Rôle par défaut
+                    onResult(role)
+                }
+                .addOnFailureListener {
+                    onResult("Boutiquier") // Rôle par défaut en cas d'erreur
+                }
+        } else {
+            onResult("Boutiquier") // Rôle par défaut si l'utilisateur n'est pas connecté
+        }
+    }
+
+
+
+
+
     fun signup(
         email: String,
         password: String,

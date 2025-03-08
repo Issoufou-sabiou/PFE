@@ -38,13 +38,11 @@ import com.example.firebaseauthdemoapp.services.AuthState
 import com.example.firebaseauthdemoapp.services.AuthViewModel
 
 @Composable
-fun LoginPage(modifier: Modifier, navController: NavController, authViewModel: AuthViewModel){
-
-    // Variables pour stocker l'email et le mot de passe de l'utilisateur
+fun LoginPage(modifier: Modifier, navController: NavController, authViewModel: AuthViewModel) {
+    // États pour les champs de saisie
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var passwordVisibility by remember { mutableStateOf(false) } // État pour la visibilité du mot de passe
-
+    var passwordVisibility by remember { mutableStateOf(false) }
 
     // Observation de l'état d'authentification à partir du ViewModel
     val authState = authViewModel.authState.observeAsState()
@@ -54,75 +52,72 @@ fun LoginPage(modifier: Modifier, navController: NavController, authViewModel: A
 
     // Effet qui se déclenche lorsqu'il y a un changement dans l'état de l'authentification
     LaunchedEffect(authState.value) {
-        when(authState.value){
-            // Si l'utilisateur est authentifié, on navigue vers la page d'accueil
-            is AuthState.Authenticated -> navController.navigate("home")
+        when (authState.value) {
+            // Si l'utilisateur est authentifié, on récupère son rôle et on redirige
+            is AuthState.Authenticated -> {
+                authViewModel.getUserRole { role ->
+                    when (role) {
+                        "Boutiquier" -> navController.navigate("boutiquier") // Redirection pour les boutiquiers
+                        "Livreur" -> navController.navigate("livreur") // Redirection pour les livreurs
+                        else -> Toast.makeText(context, "Rôle non reconnu", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
 
             // Si une erreur se produit, un Toast s'affiche avec le message d'erreur
-            is AuthState.Error -> Toast.makeText(context,
-                (authState.value as AuthState.Error).message, Toast.LENGTH_SHORT).show()
+            is AuthState.Error -> Toast.makeText(
+                context,
+                (authState.value as AuthState.Error).message,
+                Toast.LENGTH_SHORT
+            ).show()
 
             else -> Unit // Aucun traitement pour les autres états
         }
     }
 
-
     // Layout principal de la page de connexion
-    Column (
-        modifier = Modifier.fillMaxSize(), // L'interface occupe toute la taille disponible
-        verticalArrangement = Arrangement.Center, // Centrage vertical du contenu
-        horizontalAlignment = Alignment.CenterHorizontally // Centrage horizontal du contenu
-    ){
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         // Titre de la page de connexion
         Text(
             text = "Login page",
-            fontSize = 32.sp // Taille du texte
+            fontSize = 32.sp
         )
-        Spacer(modifier = Modifier.height(16.dp)) // Espacement entre les éléments
+        Spacer(modifier = Modifier.height(16.dp))
 
         // Champ de saisie pour l'email
         OutlinedTextField(
-            value = email, // Valeur actuelle de l'email
-            onValueChange = {
-                email = it // Mettre à jour l'email lorsque l'utilisateur saisit quelque chose
-            },
-            label = {
-                Text(text = "Email") // Label pour le champ
-            },
-            //icon email qui sera placer a gauche du champs email
+            value = email,
+            onValueChange = { email = it },
+            label = { Text(text = "Email") },
             leadingIcon = {
                 Icon(
-                    imageVector = Icons.Filled.Email, // Icône email
+                    imageVector = Icons.Filled.Email,
                     contentDescription = "Email Icon",
-                    tint = Color.Gray // Couleur de l'icône
+                    tint = Color.Gray
                 )
             }
         )
-        Spacer(modifier = Modifier.height(8.dp)) // Espacement entre les éléments
+        Spacer(modifier = Modifier.height(8.dp))
 
         // Champ de saisie pour le mot de passe
         OutlinedTextField(
-            value = password, // Valeur actuelle du mot de passe
-            onValueChange = {
-                password = it // Mettre à jour le mot de passe lorsque l'utilisateur saisit quelque chose
-            },
-            label = {
-                Text(text = "Password") // Label pour le champ
-            },
-            // Icône pour le champ de mot de passe à gauche
+            value = password,
+            onValueChange = { password = it },
+            label = { Text(text = "Password") },
             leadingIcon = {
                 Icon(
-                    imageVector = Icons.Filled.Lock, // Icône pour le mot de passe (verrouillage)
+                    imageVector = Icons.Filled.Lock,
                     contentDescription = "Password Icon",
-                    tint = Color.Gray // Couleur de l'icône
+                    tint = Color.Gray
                 )
             },
-
-            visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(), // Transformation pour cacher le mot de passe
+            visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
-                IconButton(onClick = {
-                    passwordVisibility = !passwordVisibility // Changer la visibilité
-                }) {
+                IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
                     val icon: ImageVector = if (passwordVisibility) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
                     Icon(
                         imageVector = icon,
@@ -133,29 +128,25 @@ fun LoginPage(modifier: Modifier, navController: NavController, authViewModel: A
             }
         )
 
+        Spacer(modifier = Modifier.height(16.dp))
 
-        Spacer(modifier = Modifier.height(16.dp)) // Espacement entre les éléments
-
-        // Bouton pour se connecter (envoie les informations à l'authViewModel pour la connexion)
+        // Bouton pour se connecter
         Button(
             onClick = {
-                authViewModel.login(email, password) // Appel à la fonction de connexion
+                authViewModel.login(email, password)
             },
-            enabled = authState.value != AuthState.Loading // Le bouton est désactivé lorsque l'état est "Loading"
+            enabled = authState.value != AuthState.Loading
         ) {
-            Text(text = "Login") // Texte du bouton
+            Text(text = "Login")
         }
 
+        Spacer(modifier = Modifier.height(8.dp))
 
-        Spacer(modifier = Modifier.height(8.dp)) // Espacement entre les éléments
-
-        // Lien pour rediriger l'utilisateur vers la page d'inscription si il n'a pas de compte
+        // Lien pour rediriger l'utilisateur vers la page d'inscription
         TextButton(onClick = {
-            navController.navigate("signup") // Navigation vers la page d'inscription
+            navController.navigate("signup")
         }) {
-            Text(text = "Don't have an account, signup") // Texte du lien
+            Text(text = "Don't have an account, signup")
         }
-
-
     }
 }
