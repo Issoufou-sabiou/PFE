@@ -165,7 +165,7 @@ fun ContentScreen(modifier: Modifier = Modifier, selectedIndex : Int, navControl
         0-> HomePage(modifier,navController,authViewModel)
         1-> NotificationPage()
         2-> SettingsPage()
-        3-> ProfilePage()
+        3-> ProfilePage(modifier,navController,authViewModel)
     }
 }
 

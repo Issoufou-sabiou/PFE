@@ -26,14 +26,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
+import com.example.firebaseauthdemoapp.services.AuthViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
 
 @Composable
-fun ProfilePage() {
+fun ProfilePage(modifier: Modifier, navController: NavController, authViewModel: AuthViewModel) {
     val firebaseAuth = FirebaseAuth.getInstance()
     val firestore = FirebaseFirestore.getInstance()
     val storage = FirebaseStorage.getInstance()
@@ -291,6 +293,21 @@ fun ProfilePage() {
                         color = Color.Black
                     )
                 }
+            }
+
+            // Bouton de déconnexion
+            Button(
+                onClick = {
+                    authViewModel.signout() // Appel de la fonction de déconnexion
+                    navController.navigate("login") { // Redirection vers la page de connexion
+                        popUpTo(navController.graph.startDestinationId) { // Supprime toutes les écrans de la pile
+                            inclusive = true
+                        }
+                    }
+                },
+                modifier = Modifier.padding(top = 16.dp)
+            ) {
+                Text("Déconnexion")
             }
         }
     }
