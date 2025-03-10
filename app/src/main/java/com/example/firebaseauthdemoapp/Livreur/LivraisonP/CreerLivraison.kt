@@ -94,7 +94,7 @@ fun CreerLivraison(
             onValueChange = { deliveryDate = it }
         )
 
-        // Bouton pour créer la livraison
+        // Bouton pour créer la livraison et l'envoyer dans la base de donnee
         Button(
             onClick = {
                 if (recipientName.isNotEmpty() && deliveryAddress.isNotEmpty() && deliveryDescription.isNotEmpty() && deliveryWeight.isNotEmpty() && deliveryDate.isNotEmpty()) {

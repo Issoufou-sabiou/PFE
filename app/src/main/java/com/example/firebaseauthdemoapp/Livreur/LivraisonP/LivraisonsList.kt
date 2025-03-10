@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
-fun LivraisonsListScreen(
+fun LivraisonsList(
     onBack: () -> Unit // Callback pour revenir à l'écran principal
 ) {
     var livraisons by remember { mutableStateOf<List<Livraison>>(emptyList()) }

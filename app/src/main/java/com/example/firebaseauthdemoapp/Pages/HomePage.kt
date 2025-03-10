@@ -23,13 +23,13 @@ fun HomePage(modifier: Modifier, navController: NavController, authViewModel: Au
     Column(modifier = modifier.padding(16.dp)) {
         Text("Home !")
 
-        CreerLivraison(
+       /* CreerLivraison(
             onDeliveryCreated = {
                 // Ce qui doit se passer après que la livraison a été créée avec succès
                 println("Livraison créée avec succès !")
                 // Par exemple, vous pourriez vouloir naviguer vers une autre page ou afficher un message
             }
-        )
+        )*/
 
     }
 }

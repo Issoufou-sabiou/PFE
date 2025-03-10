@@ -7,6 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.firebaseauthdemoapp.Livreur.LivreurScreen
+import com.example.firebaseauthdemoapp.Pages.AjouterLivraisonPage
+import com.example.firebaseauthdemoapp.Pages.LivraisonPage
 
 import com.example.firebaseauthdemoapp.Pages.LoginPage
 import com.example.firebaseauthdemoapp.Pages.SignupPage
@@ -25,13 +27,15 @@ fun MyAppNavigation(modifier: Modifier, authViewModel: AuthViewModel) {
             SignupPage(modifier, navController, authViewModel)
         }
         composable("boutiquier") {
-            MainScreen(modifier)
+            MainScreen(modifier, navController, authViewModel)
         }
         composable("livreur") {
             LivreurScreen(modifier, navController, authViewModel)
         }
 
-
+        composable("ajouterLivraison") {
+            LivraisonPage( navController) // Page Ajouter une Livraison
+        }
 
     }
 }

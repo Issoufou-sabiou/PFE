@@ -21,6 +21,11 @@ fun LivreurScreen(modifier: Modifier, navController: NavController, authViewMode
     ) {
         Text("Bienvenue, Livreur !")
 
+        Button(onClick =  { navController.navigate("ajouterLivraison")}){
+            Text("Aller à Ajouter une Livraison")
+
+        }
+
         // Bouton de déconnexion
         Button(
             onClick = {

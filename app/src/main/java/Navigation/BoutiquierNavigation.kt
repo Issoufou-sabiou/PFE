@@ -26,7 +26,7 @@ fun BoutiquierNavigation(modifier: Modifier, authViewModel: AuthViewModel) {
             SignupPage(modifier, navController, authViewModel)
         }
         composable("Home") {
-            MainScreen(modifier)
+            MainScreen(modifier, navController, authViewModel)
         }
 
         composable("Category") {

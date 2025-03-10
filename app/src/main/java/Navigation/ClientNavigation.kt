@@ -25,9 +25,7 @@ fun ClientNavigation(modifier: Modifier, authViewModel: AuthViewModel) {
         composable("Signup") {
             SignupPage(modifier, navController, authViewModel)
         }
-        composable("Home") {
-            MainScreen(modifier)
-        }
+
 
         composable("Category") {
             CategoryPage(modifier, navController)
